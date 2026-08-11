@@ -3,37 +3,730 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gakuran Academy | Student ID Registration</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
+    <title>GAKURAN ROBLOX - Student ID Card Generator</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* ตั้งค่าฟอนต์ */
-        body { font-family: 'Prompt', sans-serif; }
-        .font-cinzel { font-family: 'Cinzel', serif; }
+        :root {
+            --primary-glow: #ffd700;
+            --bg-color: #0b0c10;
+            --card-base-1: #1a0b2e;
+            --card-base-2: #11001c;
+            --accent-gold: #d4af37;
+            --card-glow-color: rgba(255, 215, 0, 0.6);
+        }
 
-        /* พื้นหลังอวกาศ/เวทมนตร์เคลื่อนไหว */
-        .animated-bg {
-            background: linear-gradient(-45deg, #050505, #2a0845, #640d14, #001233, #050505);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Kanit', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1b112c 0%, #050508 100%);
+            color: #fff;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Header Header */
+        header {
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        /* ดีไซน์กระจกใส (Glassmorphism) */
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, #ff71ce, #01cdfe, #05ffa1, #b967ff, #fffb96);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        header p {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+            flex-wrap: wrap;
+        }
+
+        /* Card Preview Container */
+        .stage-container {
+            flex: 1;
+            min-width: 320px;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            perspective: 1200px;
+        }
+
+        .card-viewport {
+            width: 100%;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+        }
+
+        .card-viewport:active {
+            cursor: grabbing;
+        }
+
+        /* 3D Card */
+        .id-card {
+            width: 380px;
+            height: 240px;
+            border-radius: 16px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            box-shadow: 0 0 35px var(--card-glow-color), 0 20px 40px rgba(0,0,0,0.8);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--card-base-1), var(--card-base-2));
+        }
+
+        /* Holographic Metallic Overlay */
+        .id-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                115deg,
+                transparent 20%,
+                rgba(255, 255, 255, 0.25) 40%,
+                rgba(255, 215, 0, 0.3) 45%,
+                rgba(255, 0, 128, 0.25) 50%,
+                transparent 70%
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+            mix-blend-mode: color-dodge;
+            opacity: 0.7;
+        }
+
+        /* Card Design Layout */
+        .card-header {
+            height: 50px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--accent-gold);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .school-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            letter-spacing: 1.5px;
+        }
+
+        .card-badge-logo {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+        }
+
+        .card-body {
+            display: flex;
+            padding: 12px 15px;
+            gap: 15px;
+            height: calc(100% - 50px);
+            position: relative;
+        }
+
+        /* Avatar Box */
+        .avatar-box {
+            width: 100px;
+            height: 125px;
+            border-radius: 8px;
+            border: 2px solid var(--accent-gold);
+            background: #000;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Information Details */
+        .info-box {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .info-row {
+            margin-bottom: 4px;
+        }
+
+        .info-label {
+            font-size: 0.65rem;
+            color: #d0d0e0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            word-break: break-word;
+        }
+
+        .rank-badge-display {
+            display: inline-block;
+            padding: 2px 8px;
+            background: linear-gradient(90deg, #ff0055, #7928ca);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 0 8px rgba(255,0,85,0.5);
+        }
+
+        .id-number-display {
+            font-family: 'Cinzel', monospace;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            letter-spacing: 2px;
+        }
+
+        /* Watermark & Accessories */
+        .watermark {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 2.5rem;
+            opacity: 0.12;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        .sticker-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .sticker {
+            position: absolute;
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
+        }
+
+        /* Controls for 3D */
+        .rotate-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .btn-action {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-action:hover {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--accent-gold);
+        }
+
+        /* Form Editor Panel */
+        .editor-panel {
+            flex: 1.2;
+            min-width: 320px;
+            background: rgba(15, 15, 25, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .editor-panel h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #c0c0e0;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .id-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .id-prefix {
+            padding: 10px 14px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-family: 'Cinzel', monospace;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .id-input-wrapper input {
+            border: none;
+            background: transparent;
+            padding: 10px;
+            color: #fff;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+            font-family: 'Cinzel', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* Preset Color Buttons */
+        .color-presets {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .color-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            transition: transform 0.2s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .id-card {
+                width: 320px;
+                height: 200px;
+            }
+            .avatar-box {
+                width: 85px;
+                height: 105px;
+            }
+            .card-viewport {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid => ID"></i> GAKURAN ROBLOX ID CARD</h1>
+        <p>ระบบสร้างบัตรประจำตัวนักเรียน ชุมชนกาคุรัน (360° Interactive Studio)</p>
+    </header>
+
+    <div class="main-wrapper">
+
+        <!-- 3D Card Display Area -->
+        <div class="stage-container">
+            <div class="card-viewport" id="cardViewport">
+                <div class="id-card" id="idCard">
+                    <!-- Holographic Sticker Overlay -->
+                    <div class="sticker-layer" id="stickerLayer"></div>
+
+                    <!-- Card Header -->
+                    <div class="card-header">
+                        <div class="school-title" id="schoolNameDisplay">GAKURAN HIGH SCHOOL</div>
+                        <i class="fa-solid fa-shield-halved card-badge-logo"></i>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="avatar-box">
+                            <img id="avatarPreview" src="https://via.placeholder.com/150/000000/FFFFFF?text=AVATAR" alt="Student Photo">
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-row">
+                                <div class="info-label">ชื่อ-นามสกุล / Roblox Name</div>
+                                <div class="info-value" id="nameDisplay">นายตัวอย่าง สุดเท่</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">เข็มยศ / ฉายาประจำตัว</div>
+                                <div>
+                                    <span class="rank-badge-display" id="rankDisplay">🔥 แม่ทัพกาคุรัน</span>
+                                </div>
+                            </div>
+
+                            <div class="info-row flex-row" style="justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div class="info-label">สังกัด / แผนก</div>
+                                    <div class="info-value" id="deptDisplay">สายลุยประจำเซิร์ฟ</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="info-label">STUDENT ID</div>
+                                    <div class="id-number-display" id="idDisplay">GK-1337</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background Watermark -->
+                    <i class="fa-solid fa-dragon watermark"></i>
+                </div>
+            </div>
+
+            <!-- Controls for Rotation -->
+            <div class="rotate-controls">
+                <button class="btn-action" onclick="resetRotation()"><i class="fa-solid fa-rotate-left"></i> รีเซ็ตมุมมอง</button>
+                <button class="btn-action" id="autoSpinBtn" onclick="toggleAutoSpin()"><i class="fa-solid fa-arrows-spin"></i> หมุน 360° ออโต้</button>
+            </div>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 8px;">💡 ใช้เม้าส์ลาก หรือเอานิ้วแตะลากที่บัตรเพื่อหมุนดูได้ 360 องศา</p>
+        </div>
+
+        <!-- Form Editor Panel -->
+        <div class="editor-panel">
+            <h2><i class="fa-solid fa-sliders"></i> ปรับแต่งข้อมูลบัตรประจำตัว</h2>
+
+            <!-- Name -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> ชื่อ-นามสกุล (หรือชื่อ Roblox):</label>
+                <input type="text" id="inputName" class="form-control" value="นายตัวอย่าง สุดเท่" placeholder="กรอกชื่อของคุณ">
+            </div>
+
+            <!-- ID Input (Locked GK- prefix) -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-id-badge"></i> รหัสนักเรียน (ใส่เฉพาะตัวเลข 4 หลัก):</label>
+                <div class="id-input-wrapper">
+                    <span class="id-prefix">GK-</span>
+                    <input type="text" id="inputId" maxlength="4" placeholder="1337" value="1337">
+                </div>
+            </div>
+
+            <!-- Avatar Upload -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-image"></i> อัปโหลดรูปโปรไฟล์ (รองรับทุกรูป):</label>
+                <input type="file" id="inputAvatar" class="form-control" accept="image/*">
+            </div>
+
+            <!-- Rank Select + Custom -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-award"></i> เข็มยศ / ฉายา:</label>
+                <select id="selectRank" class="form-control" onchange="handleRankChange()">
+                    <option value="🔥 แม่ทัพกาคุรัน">🔥 แม่ทัพกาคุรัน</option>
+                    <option value="⚡ ศิษย์เอกสายดาร์ก">⚡ ศิษย์เอกสายดาร์ก</option>
+                    <option value="👑 หัวหน้าแก๊งครองเมือง">👑 หัวหน้าแก๊งครองเมือง</option>
+                    <option value="🏎️ นักบิดความเร็วสูง">🏎️ นักบิดความเร็วสูง</option>
+                    <option value="🎯 สไนเปอร์ไร้เงา">🎯 สไนเปอร์ไร้เงา</option>
+                    <option value="custom">✍️ พิมพ์ฉายากำหนดเอง...</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="customRankGroup" style="display: none;">
+                <label><i class="fa-solid fa-pen-to-square"></i> ฉายากำหนดเอง:</label>
+                <input type="text" id="inputCustomRank" class="form-control" placeholder="พิมพ์ฉายาสุดเท่ของคุณ">
+            </div>
+
+            <!-- Department -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-users-gear"></i> สังกัด / กลุ่ม:</label>
+                <input type="text" id="inputDept" class="form-control" value="สายลุยประจำเซิร์ฟ" placeholder="เช่น สภาผู้ปกครอง, หน่วยรบ">
+            </div>
+
+            <!-- Color Theme Selector -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-palette"></i> เลือกโทนสีบัตรการ์ด (Theme):</label>
+                <div class="color-presets">
+                    <!-- Gold -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #ffd700, #b8860b);" onclick="setTheme('#2b1e00', '#0f0b00', '#ffd700', 'rgba(255, 215, 0, 0.6)')" title="Gold Royalty"></div>
+                    <!-- Purple -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #b967ff, #4e008e);" onclick="setTheme('#210038', '#0b0014', '#b967ff', 'rgba(185, 103, 255, 0.6)')" title="Cyber Purple"></div>
+                    <!-- Red -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #ff0055, #800020);" onclick="setTheme('#380010', '#140006', '#ff0055', 'rgba(255, 0, 85, 0.6)')" title="Crimson Red"></div>
+                    <!-- Blue -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #01cdfe, #004080);" onclick="setTheme('#001a33', '#000a14', '#01cdfe', 'rgba(1, 205, 254, 0.6)')" title="Neon Blue"></div>
+                    <!-- Pink -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #ff71ce, #a10066);" onclick="setTheme('#380025', '#14000d', '#ff71ce', 'rgba(255, 113, 206, 0.6)')" title="Sakura Pink"></div>
+                    <!-- Obsidian Black -->
+                    <div class="color-btn" style="background: linear-gradient(45deg, #444, #000);" onclick="setTheme('#1a1a1a', '#050505', '#ffffff', 'rgba(255, 255, 255, 0.4)')" title="Obsidian Black"></div>
+                </div>
+            </div>
+
+            <!-- Stickers / Decoration -->
+            <div class="form-group">
+                <label><i class="fa-solid fa-icons"></i> ตกแต่งสติ๊กเกอร์บนบัตร:</label>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-action" onclick="toggleSticker('👑', 'top: 10px; right: 15px;')">👑 มงกุฎ</button>
+                    <button class="btn-action" onclick="toggleSticker('🔥', 'bottom: 10px; left: 105px;')">🔥 ไฟ</button>
+                    <button class="btn-action" onclick="toggleSticker('⚡', 'top: 60px; right: 15px;')">⚡ สายฟ้า</button>
+                    <button class="btn-action" onclick="clearStickers()">❌ ล้างตกแต่ง</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Realtime Data Binding ---
+        const inputName = document.getElementById('inputName');
+        const inputId = document.getElementById('inputId');
+        const selectRank = document.getElementById('selectRank');
+        const inputCustomRank = document.getElementById('inputCustomRank');
+        const customRankGroup = document.getElementById('customRankGroup');
+        const inputDept = document.getElementById('inputDept');
+        const inputAvatar = document.getElementById('inputAvatar');
+
+        const nameDisplay = document.getElementById('nameDisplay');
+        const idDisplay = document.getElementById('idDisplay');
+        const rankDisplay = document.getElementById('rankDisplay');
+        const deptDisplay = document.getElementById('deptDisplay');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        inputName.addEventListener('input', (e) => {
+            nameDisplay.textContent = e.target.value || 'ชื่อของคุณ';
+        });
+
+        // Lock Student ID format to GK-XXXX (4 Digits Only)
+        inputId.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/[^0-9]/g, ''); // Numbers only
+            if (val.length > 4) val = val.slice(0, 4);
+            e.target.value = val;
+            idDisplay.textContent = 'GK-' + (val.padStart(4, '0'));
+        });
+
+        function handleRankChange() {
+            if (selectRank.value === 'custom') {
+                customRankGroup.style.display = 'block';
+                rankDisplay.textContent = inputCustomRank.value || 'ฉายากำหนดเอง';
+            } else {
+                customRankGroup.style.display = 'none';
+                rankDisplay.textContent = selectRank.value;
+            }
+        }
+
+        inputCustomRank.addEventListener('input', (e) => {
+            rankDisplay.textContent = e.target.value || 'ฉายากำหนดเอง';
+        });
+
+        inputDept.addEventListener('input', (e) => {
+            deptDisplay.textContent = e.target.value || 'สังกัดของคุณ';
+        });
+
+        // Photo Upload Handling
+        inputAvatar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    avatarPreview.src = evt.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- 2. Color Theme Switching ---
+        function setTheme(base1, base2, accent, glow) {
+            document.documentElement.style.setProperty('--card-base-1', base1);
+            document.documentElement.style.setProperty('--card-base-2', base2);
+            document.documentElement.style.setProperty('--accent-gold', accent);
+            document.documentElement.style.setProperty('--card-glow-color', glow);
+        }
+
+        // --- 3. Sticker Overlay ---
+        const stickerLayer = document.getElementById('stickerLayer');
+        function toggleSticker(emoji, styleCss) {
+            const sticker = document.createElement('div');
+            sticker.className = 'sticker';
+            sticker.innerHTML = emoji;
+            sticker.style.cssText = styleCss;
+            stickerLayer.appendChild(sticker);
+        }
+        function clearStickers() {
+            stickerLayer.innerHTML = '';
+        }
+
+        // --- 4. 360 Degree 3D Card Interaction ---
+        const cardViewport = document.getElementById('cardViewport');
+        const idCard = document.getElementById('idCard');
+        
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let rotX = 10;
+        let rotY = -20;
+        let autoSpinInterval = null;
+
+        function updateCardTransform() {
+            idCard.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        }
+
+        // Mouse Drag Controls
+        cardViewport.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+            stopAutoSpin();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+
+            rotY += deltaX * 0.8;
+            rotX -= deltaY * 0.8;
+
+            updateCardTransform();
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Touch Controls for Mobile/Tablet/iPad
+        cardViewport.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            stopAutoSpin();
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
+            const deltaX = e.touches[0].clientX - previousMousePosition.x;
+            const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+            rotY += deltaX * 0.8;
+            rotX -= deltaY * 0.8;
+
+            updateCardTransform();
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        function resetRotation() {
+            stopAutoSpin();
+            rotX = 0;
+            rotY = 0;
+            updateCardTransform();
+        }
+
+        function toggleAutoSpin() {
+            if (autoSpinInterval) {
+                stopAutoSpin();
+            } else {
+                document.getElementById('autoSpinBtn').style.background = 'var(--accent-gold)';
+                document.getElementById('autoSpinBtn').style.color = '#000';
+                autoSpinInterval = setInterval(() => {
+                    rotY += 2;
+                    updateCardTransform();
+                }, 16);
+            }
+        }
+
+        function stopAutoSpin() {
+            if (autoSpinInterval) {
+                clearInterval(autoSpinInterval);
+                autoSpinInterval = null;
+                document.getElementById('autoSpinBtn').style.background = 'rgba(255, 255, 255, 0.1)';
+                document.getElementById('autoSpinBtn').style.color = '#fff';
+            }
+        }
+
+        // Initialize Card Tilt
+        updateCardTransform();
+    </script>
+</body>
+</html>
         .glass-panel {
             background: rgba(15, 15, 20, 0.6);
             backdrop-filter: blur(12px);
