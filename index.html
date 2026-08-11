@@ -1,314 +1,898 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gakuran Student ID Card Generator</title>
-    <style>
-        /* --- 1. การตั้งค่าระบบและการออกแบบพื้นฐาน --- */
-        :root {
-            --primary-color: #0d1117;
-            --accent-color: #ffd700; /* สีทองกาคุรัน */
-            --text-color: #ffffff;
-            --card-glow: rgba(255, 215, 0, 0.3);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAKURAN HIGH SCHOOL - Student ID Generator</title>
+  
+  <!-- Google Fonts & Fonts for Luxury Theme -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Kanit:wght@300;400;600;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- html2canvas for Download Feature -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        body {
-            background: radial-gradient(circle at center, #1a1c23 0%, #0a0b0e 100%);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            perspective: 1000px; /* สร้างมิติ 3D สำหรับตัวการ์ด */
-        }
+  <style>
+    :root {
+      --primary: #ffd700;
+      --accent: #ff007f;
+      --secondary: #8a2be2;
+      --bg-dark: #0a0814;
+      --card-bg-1: #120e24;
+      --card-bg-2: #2a1540;
+      --text-color: #ffffff;
+      --glow-color: rgba(255, 215, 0, 0.5);
+      --holo-opacity: 0.5;
+    }
 
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            justify-content: center;
-            align-items: center;
-            max-width: 1100px;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Kanit', sans-serif;
+    }
 
-        /* --- 2. ความอลังการของตัวการ์ด (The Card) --- */
-        .card-container {
-            position: relative;
-            width: 380px;
-            height: 580px;
-            transition: transform 0.1s ease;
-            transform-style: preserve-3d;
-        }
+    body {
+      background: radial-gradient(circle at center, #1b1130 0%, var(--bg-dark) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      overflow-x: hidden;
+    }
 
-        .id-card {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #141722 0%, #0b0c10 100%);
-            border: 3px solid var(--accent-color);
-            border-radius: 16px;
-            box-shadow: 0 0 30px var(--card-glow), inset 0 0 20px rgba(0,0,0,0.6);
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 25px;
-            box-sizing: border-box;
-            transform: translateZ(50px); /* ดันเนื้อหาลอยขึ้นมาในมิติ 3D */
-        }
+    /* Ambient Background Effects */
+    .bg-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      filter: blur(150px);
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: -1;
+      animation: pulse 6s infinite alternate;
+    }
+    .bg-glow-2 {
+      position: fixed;
+      right: 10%;
+      bottom: 10%;
+      width: 350px;
+      height: 350px;
+      background: var(--secondary);
+      filter: blur(150px);
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: -1;
+    }
 
-        /* เอฟเฟกต์โฮโลแกรม / สะท้อนแสงเงา */
-        .id-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(105deg, 
-                rgba(255,255,255,0) 30%, 
-                rgba(255,255,255,0.13) 40%, 
-                rgba(255,215,0,0.1) 50%, 
-                rgba(255,255,255,0.13) 60%, 
-                rgba(255,255,255,0) 70%);
-            background-size: 200% 100%;
-            background-position: 0% 0%;
-            transition: background-position 0.5s ease;
-            pointer-events: none;
-            z-index: 5;
-        }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.2; }
+      100% { transform: scale(1.3); opacity: 0.4; }
+    }
 
-        .card-container:hover .id-card::before {
-            background-position: 150% 0%;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-        /* หัวบัตรและตราโรงเรียน */
-        .card-header {
-            text-align: center;
-            width: 100%;
-            margin-bottom: 20px;
-            border-bottom: 2px dashed rgba(255,215,0,0.3);
-            padding-bottom: 10px;
-        }
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #fff, var(--primary), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px var(--glow-color);
+    }
 
-        .school-badge {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-color);
-            letter-spacing: 3px;
-        }
+    header p {
+      color: #a0a0c0;
+      font-size: 0.95rem;
+    }
 
-        .school-name {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
+    /* Main Container */
+    .app-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 35px;
+      max-width: 1300px;
+      width: 100%;
+    }
 
-        /* กรอบรูปอนิเมะ/ผู้ใช้งาน (สไตล์กระดุมทองกาคุรัน) */
-        .photo-frame {
-            width: 180px;
-            height: 220px;
-            border: 2px solid var(--accent-color);
-            background: #090a0f;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-        }
+    /* Control Panel */
+    .panel {
+      background: rgba(20, 15, 38, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 2px solid var(--primary);
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
 
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .panel h2 {
+      font-size: 1.25rem;
+      margin-bottom: 18px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
 
-        /* รายละเอียดข้อมูลในบัตร */
-        .card-body {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+    .form-group {
+      margin-bottom: 15px;
+    }
 
-        .info-group {
-            display: flex;
-            flex-direction: column;
-            border-left: 3px solid var(--accent-color);
-            padding-left: 10px;
-        }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: #d1d1e0;
+    }
 
-        .info-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            opacity: 0.6;
-            letter-spacing: 1px;
-        }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
 
-        .info-value {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--glow-color);
+    }
 
-        /* ดีเทลความเท่: บาร์โค้ด และแถบพลัง */
-        .card-footer {
-            margin-top: auto;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            opacity: 0.7;
-            font-size: 10px;
-        }
+    /* Lock Prefix Input Style */
+    .id-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-        .barcode {
-            font-family: monospace;
-            letter-spacing: 4px;
-            font-size: 14px;
-        }
+    .id-prefix {
+      padding: 10px 14px;
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--primary);
+      font-weight: bold;
+      font-family: 'Montserrat', sans-serif;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+    }
 
-        /* --- 3. แผงควบคุมสำหรับให้คนอื่นมาปรับแต่ง (Control Panel) --- */
-        .control-panel {
-            background: rgba(20, 23, 34, 0.8);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 16px;
-            width: 320px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+    .id-input-wrapper input {
+      border: none;
+      background: transparent;
+      padding: 10px 14px;
+      color: #fff;
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      outline: none;
+    }
 
-        .control-panel h2 {
-            margin-top: 0;
-            color: var(--accent-color);
-            font-size: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
+    /* Color Grid Presets */
+    .theme-presets {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
 
-        .input-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+    .preset-btn {
+      height: 32px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
 
-        .input-group label {
-            font-size: 12px;
-            opacity: 0.8;
-        }
+    .preset-btn:hover {
+      transform: scale(1.1);
+    }
 
-        .input-group input, .input-group select {
-            background: #141722;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 10px;
-            border-radius: 6px;
-            color: white;
-            font-size: 14px;
-        }
+    /* 3D Card Display Area */
+    .card-stage {
+      flex: 1;
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+    }
 
-        .input-group input:focus {
-            border-color: var(--accent-color);
-            outline: none;
-        }
+    .card-viewport {
+      width: 420px;
+      height: 265px;
+      position: relative;
+      cursor: grab;
+    }
 
-        .btn-download {
-            width: 100%;
-            background: linear-gradient(90deg, #ffd700, #ffa500);
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            color: #000;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 10px;
-        }
+    .card-viewport:active {
+      cursor: grabbing;
+    }
 
-        .btn-download:hover {
-            transform: scale(1.03);
-        }
-    </style>
-    <!-- นำเข้า html2canvas เพื่อใช้ในการดาวน์โหลดการ์ดเป็นรูปภาพ -->
-    <script src="https://cloudflare.com"></script>
+    .card-3d {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      border-radius: 18px;
+    }
+
+    /* Card Sides */
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      backface-visibility: hidden;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px var(--glow-color);
+      background: linear-gradient(135deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Holographic Overlay Layer */
+    .holo-foil {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: 18px;
+      background: linear-gradient(
+        115deg,
+        transparent 20%,
+        rgba(255, 0, 128, 0.3) 35%,
+        rgba(0, 255, 255, 0.3) 50%,
+        rgba(255, 215, 0, 0.3) 65%,
+        transparent 80%
+      );
+      mix-blend-mode: color-dodge;
+      opacity: var(--holo-opacity);
+      pointer-events: none;
+      z-index: 10;
+      background-size: 200% 200%;
+      transition: background-position 0.1s ease;
+    }
+
+    /* Metallic Glare Effect */
+    .glare {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 11;
+      opacity: 0.5;
+    }
+
+    /* Card Layout Front */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid var(--primary);
+      padding-bottom: 8px;
+      z-index: 2;
+    }
+
+    .school-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .school-subtitle {
+      font-size: 0.6rem;
+      color: #ccc;
+      letter-spacing: 2px;
+    }
+
+    .card-body {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-top: 10px;
+      z-index: 2;
+    }
+
+    /* Profile Photo Frame */
+    .photo-frame {
+      width: 95px;
+      height: 115px;
+      border-radius: 12px;
+      border: 2px solid var(--primary);
+      background: rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+      flex-shrink: 0;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-size: 0.55rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .info-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #fff;
+    }
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 4px;
+      width: fit-content;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 2;
+    }
+
+    .id-code-display {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 8px var(--glow-color);
+    }
+
+    .hologram-stamp {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary) 0%, var(--accent) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: bold;
+      color: #000;
+      box-shadow: 0 0 10px var(--primary);
+      border: 1.5px dashed #fff;
+    }
+
+    /* Back Card Styling */
+    .mag-strip {
+      width: 100%;
+      height: 38px;
+      background: #111;
+      position: absolute;
+      top: 20px; left: 0;
+    }
+
+    .back-content {
+      margin-top: 50px;
+      z-index: 2;
+    }
+
+    .sig-strip {
+      background: #fff;
+      height: 30px;
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 15px;
+      font-family: 'Cinzel', serif;
+      color: #333;
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    .barcode-container {
+      background: #fff;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .barcode {
+      width: 100%;
+      height: 30px;
+      background: repeating-linear-gradient(
+        90deg,
+        #000,
+        #000 2px,
+        #fff 2px,
+        #fff 4px,
+        #000 4px,
+        #000 7px
+      );
+    }
+
+    .disclaimer {
+      font-size: 0.55rem;
+      color: #aaa;
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.2;
+    }
+
+    /* Controls Bar below card */
+    .card-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      color: #000;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px var(--glow-color);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .card-viewport {
+        width: 340px;
+        height: 215px;
+      }
+      .photo-frame {
+        width: 75px;
+        height: 95px;
+      }
+      .school-title {
+        font-size: 0.8rem;
+      }
+      .info-value {
+        font-size: 0.78rem;
+      }
+      .id-code-display {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <h1 style="text-align:center; color:#fff; font-size: 24px; margin-bottom: 30px; letter-spacing: 1px;">⚙️ GAKURAN ID CARD CUSTOMIZER</h1>
+  <div class="bg-glow"></div>
+  <div class="bg-glow-2"></div>
 
-    <div class="container">
-        <!-- [ฝั่งซ้าย] ตัวการ์ดอลังการ 3D -->
-        <div class="card-container" id="cardContainer">
-            <div class="id-card" id="idCard">
-                <div class="card-header">
-                    <div class="school-badge" id="textBadge">学</div>
-                    <div class="school-name" id="textSchool">Karasuno High School</div>
-                </div>
-                
-                <div class="photo-frame">
-                    <img id="avatarPreview" src="https://placeholder.com" alt="Student Photo">
-                </div>
+  <header>
+    <h1>GAKURAN HIGH SCHOOL</h1>
+    <p>ระบบสร้างบัตรประจำตัวนักเรียนแบบ 3D Interactive</p>
+  </header>
 
-                <div class="card-body">
-                    <div class="info-group">
-                        <span class="info-label">Student Name</span>
-                        <span class="info-value" id="textName">Hinata Shoyo</span>
-                    </div>
-                    <div class="info-group">
-                        <span class="info-label">Class / Section</span>
-                        <span class="info-value" id="textClass">Class 1-1 / No.10</span>
-                    </div>
-                    <div class="info-group">
-                        <span class="info-label">Status / Role</span>
-                        <span class="info-value" id="textRole">Middle Blocker</span>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <div class="barcode">||||| | |||| || | ||</div>
-                    <div id="textId">ID: 2026-0010</div>
-                </div>
-            </div>
+  <div class="app-container">
+    
+    <!-- Left Control Panel -->
+    <div class="panel">
+      <h2>🪪 ข้อมูลบัตรประจำตัว</h2>
+      
+      <div class="form-group">
+        <label>รหัสนักเรียน (ล็อก GK- กรอกได้เฉพาะเลข 4 หลัก)</label>
+        <div class="id-input-wrapper">
+          <span class="id-prefix">GK-</span>
+          <input type="text" id="input-id-number" maxlength="4" placeholder="0001">
         </div>
+      </div>
 
-        <!-- [ฝั่งขวา] แผงควบคุมการปรับแต่ง -->
-        <div class="control-panel">
-            <h2>Customize Card</h2>
+      <div class="form-group">
+        <label>ชื่อ-นามสกุล / ชื่อใน Roblox</label>
+        <input type="text" class="form-control" id="input-name" placeholder="เช่น Ryuuya Kenji" value="Ryuuya Kenji">
+      </div>
+
+      <div class="form-group">
+        <label>เข็มยศ / ฉายาประจำตัว</label>
+        <select class="form-control" id="select-rank">
+          <option value="👑 ประธานนักเรียน">👑 ประธานนักเรียน</option>
+          <option value="⚔️ หัวโจกประจำโรงเรียน" selected>⚔️ หัวโจกประจำโรงเรียน</option>
+          <option value="🛡️ ฝ่ายปกครองสุดโหด">🛡️ ฝ่ายปกครองสุดโหด</option>
+          <option value="🌸 ดาวประจำโรงเรียน">🌸 ดาวประจำโรงเรียน</option>
+          <option value="⚡ มือขวาประธาน">⚡ มือขวาประธาน</option>
+          <option value="🐉 นักเลงในตำนาน">🐉 นักเลงในตำนาน</option>
+          <option value="🔮 ผู้เฝ้ามอง">🔮 ผู้เฝ้ามอง</option>
+          <option value="CUSTOM">✏️ กำหนดฉายาเอง...</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="custom-rank-group" style="display: none;">
+        <label>กรอกฉายาที่ต้องการ</label>
+        <input type="text" class="form-control" id="input-custom-rank" placeholder="เช่น เทพซ่า 007">
+      </div>
+
+      <div class="form-group">
+        <label>ชั้นเรียน / แผนก</label>
+        <input type="text" class="form-control" id="input-class" placeholder="เช่น ม.ปลาย ห้อง 1-A" value="ม.ปลาย ห้อง 1-A">
+      </div>
+
+      <div class="form-group">
+        <label>รูปโปรไฟล์นักเรียน</label>
+        <input type="file" class="form-control" id="input-photo" accept="image/*">
+      </div>
+
+      <h2 style="margin-top: 25px;">🎨 ปรับแต่งธีมและสีบัตร</h2>
+      
+      <div class="form-group">
+        <label>เลือกจานสีธีมยอดนิยม</label>
+        <div class="theme-presets">
+          <button class="preset-btn" style="background: linear-gradient(45deg, #ffd700, #ff007f);" onclick="setTheme('#ffd700', '#ff007f', '#8a2be2', '#120e24', '#2a1540')"></button>
+          <button class="preset-btn" style="background: linear-gradient(45deg, #ff0055, #ff5500);" onclick="setTheme('#ff5500', '#ff0055', '#990033', '#200508', '#400a10')"></button>
+          <button class="preset-btn" style="background: linear-gradient(45deg, #00f2fe, #4facfe);" onclick="setTheme('#00f2fe', '#0072ff', '#000066', '#041026', '#08204d')"></button>
+          <button class="preset-btn" style="background: linear-gradient(45deg, #b000ff, #00e5ff);" onclick="setTheme('#00e5ff', '#b000ff', '#4a00e0', '#100526', '#26084d')"></button>
+          <button class="preset-btn" style="background: linear-gradient(45deg, #ffffff, #888888);" onclick="setTheme('#ffffff', '#e0e0e0', '#555555', '#111111', '#222222')"></button>
+          <button class="preset-btn" style="background: linear-gradient(45deg, #ff9a9e, #fecfef);" onclick="setTheme('#fecfef', '#ff9a9e', '#f68084', '#2b101d', '#4d1a33')"></button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <div class="form-group" style="flex: 1;">
+          <label>สีขอบ/หลัก</label>
+          <input type="color" class="form-control" id="color-primary" value="#ffd700">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>สีเน้นไฮไลต์</label>
+          <input type="color" class="form-control" id="color-accent" value="#ff007f">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Interactive Card Stage -->
+    <div class="card-stage">
+      
+      <div class="card-viewport" id="card-viewport">
+        <div class="card-3d" id="card-3d">
+          
+          <!-- FRONT SIDE -->
+          <div class="card-front" id="card-front-element">
+            <div class="holo-foil" id="holo-foil"></div>
+            <div class="glare"></div>
             
-            <div class="input-group">
-                <label>รูปภาพนักเรียน</label>
-                <input type="file" id="imageInput" accept="image/*">
+            <div class="card-header">
+              <div>
+                <div class="school-title">GAKURAN HIGH SCHOOL</div>
+                <div class="school-subtitle">ROBLOX STUDENT IDENTIFICATION</div>
+              </div>
+              <div style="font-size: 1.2rem;">⛩️</div>
             </div>
 
-            <div class="input-group">
-                <label>ตราโรงเรียน (คันจิ/ไอคอน)</label>
-                <input type="text" id="inputBadge" value="学" maxlength="2">
+            <div class="card-body">
+              <div class="photo-frame">
+                <img id="card-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Student Photo">
+              </div>
+
+              <div class="student-info">
+                <div class="info-row">
+                  <span class="info-label">ชื่อนักเรียน / Student Name</span>
+                  <span class="info-value" id="card-name-display">Ryuuya Kenji</span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">ตำแหน่ง / Title</span>
+                  <div class="badge-tag" id="card-rank-display">⚔️ หัวโจกประจำโรงเรียน</div>
+                </div>
+
+                <div class="info-row" style="margin-top: 4px;">
+                  <span class="info-label">สังกัด / Class</span>
+                  <span class="info-value" id="card-class-display" style="font-size: 0.8rem;">ม.ปลาย ห้อง 1-A</span>
+                </div>
+              </div>
             </div>
 
-            <div class="input-group">
-                <label>ชื่อโรงเรียน</label>
-                <input type="text" id="inputSchool" value="Karasuno High School">
+            <div class="card-footer">
+              <div>
+                <div style="font-size: 0.5rem; color: var(--primary); letter-spacing: 1px;">STUDENT ID</div>
+                <div class="id-code-display" id="card-id-display">GK-0001</div>
+              </div>
+              <div class="hologram-stamp">
+                GAKURAN<br>OFFICIAL
+              </div>
             </div>
+          </div>
 
-            <div class="input-group">
-                <label>ชื่อ-นามสกุล</label>
-                <input type="text" id="inputName" value="Hinata Shoyo">
+          <!-- BACK SIDE -->
+          <div class="card-back" id="card-back-element">
+            <div class="holo-foil"></div>
+            <div class="mag-strip"></div>
+
+            <div class="back-content">
+              <div style="font-size: 0.6rem; color: var(--primary); margin-bottom: 4px;">AUTHORIZED SIGNATURE</div>
+              <div class="sig-strip" id="card-sig-display">Ryuuya K.</div>
+
+              <div class="barcode-container">
+                <div class="barcode"></div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #000; font-weight: bold;" id="card-id-back">GK-0001</div>
+              </div>
+
+              <div class="disclaimer">
+                บัตรประจำตัวนี้เป็นทรัพย์สินของโรงเรียนกาคุรัน Roblox<br>
+                ใช้สำหรับยืนยันตัวตนในเซิร์ฟเวอร์ Discord ชุมชนเท่านั้น
+              </div>
             </div>
+          </div>
 
-            <div class="input-group">
-                <label>ชั้นเรียน / เลขที่</label>
-                <input type="text" id="inputClass" value="Class 1-1 / No.10">
-            </div>
+        </div>
+      </div>
 
-            <div class="input-group">
-                <label>ตำแหน่ง / ฉายา</label>
-                <input type="text" id="inputRole" value="Middle Blocker">
-            </div>
+      <!-- Controls -->
+      <div class="card-controls">
+        <button class="btn" onclick="flipCard()">🔄 พลิกบัตร 360°</button>
+        <button class="btn btn-secondary" onclick="resetRotation()">🎯 จัดองศาตรง</button>
+        <button class="btn" onclick="downloadCard()">📥 ดาวน์โหลดบัตร (PNG)</button>
+      </div>
 
+    </div>
+
+  </div>
+
+  <script>
+    // --- State Elements ---
+    const card3D = document.getElementById('card-3d');
+    const cardViewport = document.getElementById('card-viewport');
+    const holoFoil = document.getElementById('holo-foil');
+    
+    // Form Inputs
+    const inputId = document.getElementById('input-id-number');
+    const inputName = document.getElementById('input-name');
+    const selectRank = document.getElementById('select-rank');
+    const inputCustomRank = document.getElementById('input-custom-rank');
+    const customRankGroup = document.getElementById('custom-rank-group');
+    const inputClass = document.getElementById('input-class');
+    const inputPhoto = document.getElementById('input-photo');
+
+    // Display Displays
+    const cardIdDisplay = document.getElementById('card-id-display');
+    const cardIdBackDisplay = document.getElementById('card-id-back');
+    const cardNameDisplay = document.getElementById('card-name-display');
+    const cardRankDisplay = document.getElementById('card-rank-display');
+    const cardClassDisplay = document.getElementById('card-class-display');
+    const cardSigDisplay = document.getElementById('card-sig-display');
+    const cardPhoto = document.getElementById('card-photo');
+
+    // Color Pickers
+    const colorPrimary = document.getElementById('color-primary');
+    const colorAccent = document.getElementById('color-accent');
+
+    let currentRotationY = 0;
+    let isFlipped = false;
+
+    // --- ID Number Input Mask Enforcement (Max 4 digits) ---
+    inputId.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/[^0-9]/g, ''); // Strip non-numeric characters
+      if (val.length > 4) val = val.substring(0, 4);
+      e.target.value = val;
+      
+      const formatted = `GK-${val.padStart(4, '0')}`;
+      cardIdDisplay.innerText = formatted;
+      cardIdBackDisplay.innerText = formatted;
+    });
+
+    // --- Dynamic Text Updates ---
+    inputName.addEventListener('input', (e) => {
+      const val = e.target.value || 'Student Name';
+      cardNameDisplay.innerText = val;
+      cardSigDisplay.innerText = val.split(' ')[0] + ' K.';
+    });
+
+    selectRank.addEventListener('change', (e) => {
+      if (e.target.value === 'CUSTOM') {
+        customRankGroup.style.display = 'block';
+        cardRankDisplay.innerText = inputCustomRank.value || '⭐ ยศกำหนดเอง';
+      } else {
+        customRankGroup.style.display = 'none';
+        cardRankDisplay.innerText = e.target.value;
+      }
+    });
+
+    inputCustomRank.addEventListener('input', (e) => {
+      cardRankDisplay.innerText = e.target.value ? `⭐ ${e.target.value}` : '⭐ ยศกำหนดเอง';
+    });
+
+    inputClass.addEventListener('input', (e) => {
+      cardClassDisplay.innerText = e.target.value || 'ม.ปลาย';
+    });
+
+    // --- Dynamic Photo Upload ---
+    inputPhoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          cardPhoto.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // --- Color Theme Change Handlers ---
+    colorPrimary.addEventListener('input', (e) => {
+      document.documentElement.style.setProperty('--primary', e.target.value);
+      document.documentElement.style.setProperty('--glow-color', e.target.value + '80');
+    });
+
+    colorAccent.addEventListener('input', (e) => {
+      document.documentElement.style.setProperty('--accent', e.target.value);
+    });
+
+    function setTheme(primary, accent, secondary, bg1, bg2) {
+      document.documentElement.style.setProperty('--primary', primary);
+      document.documentElement.style.setProperty('--accent', accent);
+      document.documentElement.style.setProperty('--secondary', secondary);
+      document.documentElement.style.setProperty('--card-bg-1', bg1);
+      document.documentElement.style.setProperty('--card-bg-2', bg2);
+      document.documentElement.style.setProperty('--glow-color', primary + '80');
+
+      colorPrimary.value = primary;
+      colorAccent.value = accent;
+    }
+
+    // --- 3D Tilt & Mouse Physics Effect ---
+    let isDragging = false;
+    let startX, startY;
+    let rotateX = 0;
+    let rotateY = 0;
+
+    cardViewport.addEventListener('mousemove', (e) => {
+      if (isDragging) return;
+      const rect = cardViewport.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      const tiltX = (y / rect.height) * -25;
+      const tiltY = (x / rect.width) * 25;
+
+      card3D.style.transform = `rotateX(${tiltX}deg) rotateY(${currentRotationY + tiltY}deg)`;
+      
+      // Move holographic shine overlay
+      holoFoil.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
+    });
+
+    cardViewport.addEventListener('mouseleave', () => {
+      if (!isDragging) {
+        card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+      }
+    });
+
+    // --- Touch / Mouse Drag Rotation 360° ---
+    cardViewport.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+
+      rotateY = currentRotationY + deltaX * 0.5;
+      rotateX = -deltaY * 0.5;
+
+      card3D.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        currentRotationY = rotateY;
+      }
+    });
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      currentRotationY = isFlipped ? 180 : 0;
+      card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+    }
+
+    function resetRotation() {
+      isFlipped = false;
+      currentRotationY = 0;
+      card3D.style.transform = `rotateX(0deg) rotateY(0deg)`;
+    }
+
+    // --- Download Card Image Function ---
+    function downloadCard() {
+      const targetElement = isFlipped ? document.getElementById('card-back-element') : document.getElementById('card-front-element');
+      
+      // Reset rotation temporarily for crisp snapshot
+      card3D.style.transform = 'rotateX(0deg) rotateY(0deg)';
+
+      html2canvas(targetElement, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Gakuran_StudentID_${inputId.value || '0001'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        // Restore flip state if needed
+        card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+      });
+    }
+  </script>
+</body>
+</html>
