@@ -3,24 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAKURAN HIGH SCHOOL - Student ID Generator</title>
+  <title>GAKURAN ACADEMY - Student ID Customizer V2</title>
   
-  <!-- Google Fonts & Fonts for Luxury Theme -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Kanit:wght@300;400;600;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- html2canvas for Download Feature -->
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Kanit:wght@300;400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <!-- html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root {
+      --gold-grad: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+      --accent: #ff0055;
       --primary: #ffd700;
-      --accent: #ff007f;
-      --secondary: #8a2be2;
-      --bg-dark: #0a0814;
-      --card-bg-1: #120e24;
-      --card-bg-2: #2a1540;
-      --text-color: #ffffff;
-      --glow-color: rgba(255, 215, 0, 0.5);
-      --holo-opacity: 0.5;
+      --card-base: #0a0c10;
+      --card-glow: rgba(255, 215, 0, 0.25);
+      --holo-opacity: 0.4;
     }
 
     * {
@@ -31,194 +28,177 @@
     }
 
     body {
-      background: radial-gradient(circle at center, #1b1130 0%, var(--bg-dark) 100%);
-      color: var(--text-color);
+      background: #050608;
+      background-image: 
+        radial-gradient(at 20% 20%, rgba(138, 43, 226, 0.15) 0px, transparent 50%),
+        radial-gradient(at 80% 80%, rgba(255, 0, 85, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(10, 12, 16, 1) 0px, transparent 100%);
+      color: #fff;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 10px;
-      overflow-x: hidden;
-    }
-
-    /* Ambient Background Effects */
-    .bg-glow {
-      position: fixed;
-      width: 400px;
-      height: 400px;
-      background: var(--accent);
-      filter: blur(150px);
-      border-radius: 50%;
-      opacity: 0.25;
-      z-index: -1;
-      animation: pulse 6s infinite alternate;
-    }
-    .bg-glow-2 {
-      position: fixed;
-      right: 10%;
-      bottom: 10%;
-      width: 350px;
-      height: 350px;
-      background: var(--secondary);
-      filter: blur(150px);
-      border-radius: 50%;
-      opacity: 0.25;
-      z-index: -1;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.2; }
-      100% { transform: scale(1.3); opacity: 0.4; }
+      padding: 30px 15px;
     }
 
     header {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
     }
 
     header h1 {
       font-family: 'Cinzel', serif;
       font-size: 2.2rem;
-      letter-spacing: 2px;
-      background: linear-gradient(45deg, #fff, var(--primary), #fff);
+      font-weight: 900;
+      letter-spacing: 4px;
+      background: var(--gold-grad);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px var(--glow-color);
+      text-shadow: 0 10px 20px rgba(0,0,0,0.8);
     }
 
     header p {
-      color: #a0a0c0;
-      font-size: 0.95rem;
+      color: #8a8d9b;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-top: 4px;
+      text-transform: uppercase;
     }
 
-    /* Main Container */
-    .app-container {
+    /* Container */
+    .main-wrapper {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
-      gap: 35px;
-      max-width: 1300px;
+      gap: 40px;
+      max-width: 1200px;
       width: 100%;
     }
 
-    /* Control Panel */
-    .panel {
-      background: rgba(20, 15, 38, 0.75);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-top: 2px solid var(--primary);
-      border-radius: 20px;
-      padding: 25px;
+    /* Controls Panel */
+    .control-panel {
+      background: rgba(15, 17, 23, 0.65);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 28px;
       width: 100%;
-      max-width: 480px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      max-width: 440px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
     }
 
-    .panel h2 {
-      font-size: 1.25rem;
-      margin-bottom: 18px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: #d1d1e0;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 10px 14px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
       color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 10px var(--glow-color);
-    }
-
-    /* Lock Prefix Input Style */
-    .id-input-wrapper {
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 12px;
+    }
+
+    .panel-title span {
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: #a0a5b5;
+      margin-bottom: 6px;
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .custom-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--card-glow);
+    }
+
+    /* Prefix Input */
+    .id-wrapper {
+      display: flex;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       overflow: hidden;
     }
 
     .id-prefix {
-      padding: 10px 14px;
-      background: rgba(255, 215, 0, 0.15);
+      padding: 12px 16px;
+      background: rgba(255, 215, 0, 0.1);
       color: var(--primary);
+      font-family: 'Space Mono', monospace;
       font-weight: bold;
-      font-family: 'Montserrat', sans-serif;
-      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .id-input-wrapper input {
+    .id-wrapper input {
       border: none;
       background: transparent;
-      padding: 10px 14px;
+      padding: 12px 16px;
       color: #fff;
-      width: 100%;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 1rem;
-      letter-spacing: 2px;
       outline: none;
+      width: 100%;
     }
 
-    /* Color Grid Presets */
-    .theme-presets {
+    /* Theme Presets Buttons */
+    .preset-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
       margin-top: 8px;
     }
 
-    .preset-btn {
-      height: 32px;
-      border-radius: 8px;
-      border: 2px solid transparent;
+    .preset-chip {
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
-    .preset-btn:hover {
-      transform: scale(1.1);
+    .preset-chip:hover {
+      transform: translateY(-2px);
+      border-color: #fff;
     }
 
-    /* 3D Card Display Area */
+    /* Card Viewing Area */
     .card-stage {
       flex: 1;
-      min-width: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      perspective: 1200px;
+      perspective: 1000px;
+      min-width: 320px;
     }
 
+    /* Ratio CR80 / Credit Card Proportion */
     .card-viewport {
-      width: 420px;
-      height: 265px;
+      width: 440px;
+      height: 276px;
       position: relative;
       cursor: grab;
     }
@@ -227,161 +207,178 @@
       cursor: grabbing;
     }
 
-    .card-3d {
+    .card-3d-inner {
       width: 100%;
       height: 100%;
       position: absolute;
       transform-style: preserve-3d;
-      transition: transform 0.1s ease-out;
-      border-radius: 18px;
+      transition: transform 0.15s ease-out;
+      border-radius: 16px;
     }
 
-    /* Card Sides */
+    /* Both Sides */
     .card-front, .card-back {
       position: absolute;
       width: 100%;
       height: 100%;
-      border-radius: 18px;
+      border-radius: 16px;
       backface-visibility: hidden;
       overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px var(--glow-color);
-      background: linear-gradient(135deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%);
-      padding: 18px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--card-glow);
+      background: var(--card-base);
+      padding: 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+
+    /* Geometric Background Pattern on Card */
+    .card-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
     }
 
     .card-back {
       transform: rotateY(180deg);
     }
 
-    /* Holographic Overlay Layer */
-    .holo-foil {
+    /* High-End Holo Foil Layer */
+    .holo-layer {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      border-radius: 18px;
+      inset: 0;
+      border-radius: 16px;
       background: linear-gradient(
-        115deg,
-        transparent 20%,
-        rgba(255, 0, 128, 0.3) 35%,
-        rgba(0, 255, 255, 0.3) 50%,
-        rgba(255, 215, 0, 0.3) 65%,
-        transparent 80%
+        125deg,
+        transparent 0%,
+        rgba(255, 0, 128, 0.25) 30%,
+        rgba(0, 230, 255, 0.25) 50%,
+        rgba(255, 215, 0, 0.25) 70%,
+        transparent 100%
       );
       mix-blend-mode: color-dodge;
       opacity: var(--holo-opacity);
       pointer-events: none;
-      z-index: 10;
+      z-index: 5;
       background-size: 200% 200%;
-      transition: background-position 0.1s ease;
     }
 
-    /* Metallic Glare Effect */
-    .glare {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 11;
-      opacity: 0.5;
-    }
-
-    /* Card Layout Front */
+    /* Front Layout Elements */
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1.5px solid var(--primary);
-      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      padding-bottom: 10px;
       z-index: 2;
     }
 
-    .school-title {
+    .academy-name {
       font-family: 'Cinzel', serif;
-      font-weight: 900;
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-      color: var(--primary);
-      text-transform: uppercase;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .school-subtitle {
-      font-size: 0.6rem;
-      color: #ccc;
+    .card-type {
+      font-size: 0.55rem;
+      color: #8a8d9b;
       letter-spacing: 2px;
     }
 
     .card-body {
       display: flex;
-      gap: 15px;
+      gap: 18px;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 6px;
       z-index: 2;
     }
 
-    /* Profile Photo Frame */
-    .photo-frame {
-      width: 95px;
+    .photo-container {
+      width: 90px;
       height: 115px;
-      border-radius: 12px;
-      border: 2px solid var(--primary);
-      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      background: #000;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
       flex-shrink: 0;
     }
 
-    .photo-frame img {
+    .photo-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .student-info {
+    .student-details {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       overflow: hidden;
     }
 
-    .info-row {
+    .detail-item {
       display: flex;
       flex-direction: column;
     }
 
-    .info-label {
+    .detail-label {
       font-size: 0.55rem;
-      color: var(--primary);
+      color: #727685;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    .info-value {
-      font-size: 0.9rem;
+    .detail-value {
+      font-size: 0.95rem;
       font-weight: 600;
+      color: #fff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: #fff;
     }
 
-    .badge-tag {
+    .rank-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      background: rgba(255, 215, 0, 0.15);
+      gap: 6px;
+      background: rgba(255, 215, 0, 0.1);
       border: 1px solid var(--primary);
       color: var(--primary);
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 20px;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 2px;
       width: fit-content;
+    }
+
+    /* IC Chip Graphic */
+    .ic-chip {
+      width: 32px;
+      height: 24px;
+      background: linear-gradient(135deg, #d4af37, #f3e5ab, #aa771c);
+      border-radius: 4px;
+      position: relative;
+      border: 0.5px solid rgba(0,0,0,0.5);
+      box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+    }
+    .ic-chip::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0; height: 1px;
+      background: rgba(0,0,0,0.3);
     }
 
     .card-footer {
@@ -391,144 +388,116 @@
       z-index: 2;
     }
 
-    .id-code-display {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 2px;
+    .id-number-display {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
       color: #fff;
-      text-shadow: 0 0 8px var(--glow-color);
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px var(--card-glow);
     }
 
-    .hologram-stamp {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--primary) 0%, var(--accent) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
-      font-weight: bold;
-      color: #000;
-      box-shadow: 0 0 10px var(--primary);
-      border: 1.5px dashed #fff;
-    }
-
-    /* Back Card Styling */
-    .mag-strip {
+    /* Back Side Specifics */
+    .mag-stripe {
       width: 100%;
-      height: 38px;
+      height: 42px;
       background: #111;
       position: absolute;
-      top: 20px; left: 0;
+      top: 22px; left: 0;
     }
 
-    .back-content {
-      margin-top: 50px;
+    .back-body {
+      margin-top: 52px;
       z-index: 2;
     }
 
-    .sig-strip {
-      background: #fff;
-      height: 30px;
+    .signature-box {
+      background: #e8e8f0;
+      height: 32px;
       width: 100%;
-      margin-bottom: 10px;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
       padding-right: 15px;
       font-family: 'Cinzel', serif;
-      color: #333;
+      color: #222;
       font-style: italic;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 0.9rem;
     }
 
-    .barcode-container {
+    .barcode-box {
       background: #fff;
       padding: 6px;
       border-radius: 6px;
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
     }
 
-    .barcode {
+    .barcode-lines {
       width: 100%;
-      height: 30px;
+      height: 32px;
       background: repeating-linear-gradient(
         90deg,
-        #000,
-        #000 2px,
-        #fff 2px,
-        #fff 4px,
-        #000 4px,
-        #000 7px
+        #000 0px, #000 2px,
+        #fff 2px, #fff 4px,
+        #000 4px, #000 8px,
+        #fff 8px, #fff 9px
       );
     }
 
-    .disclaimer {
-      font-size: 0.55rem;
-      color: #aaa;
-      text-align: center;
-      margin-top: 8px;
-      line-height: 1.2;
-    }
-
-    /* Controls Bar below card */
-    .card-controls {
+    /* Buttons */
+    .action-bar {
       display: flex;
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 25px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     .btn {
-      padding: 10px 20px;
-      border-radius: 12px;
+      padding: 12px 24px;
+      border-radius: 14px;
       border: none;
-      background: linear-gradient(45deg, var(--primary), var(--accent));
+      background: var(--gold-grad);
       color: #000;
       font-weight: 700;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px var(--glow-color);
+      box-shadow: 0 12px 25px var(--card-glow);
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
     }
 
-    /* Media Queries */
     @media (max-width: 768px) {
       .card-viewport {
         width: 340px;
-        height: 215px;
+        height: 213px;
       }
-      .photo-frame {
-        width: 75px;
-        height: 95px;
+      .photo-container {
+        width: 70px;
+        height: 90px;
       }
-      .school-title {
+      .academy-name {
         font-size: 0.8rem;
       }
-      .info-value {
-        font-size: 0.78rem;
+      .detail-value {
+        font-size: 0.8rem;
       }
-      .id-code-display {
+      .id-number-display {
         font-size: 0.95rem;
       }
     }
@@ -536,171 +505,156 @@
 </head>
 <body>
 
-  <div class="bg-glow"></div>
-  <div class="bg-glow-2"></div>
-
   <header>
-    <h1>GAKURAN HIGH SCHOOL</h1>
-    <p>ระบบสร้างบัตรประจำตัวนักเรียนแบบ 3D Interactive</p>
+    <h1>GAKURAN ACADEMY</h1>
+    <p>ระบบสร้างบัตรประจำตัวนักเรียนระดับ VIP</p>
   </header>
 
-  <div class="app-container">
+  <div class="main-wrapper">
     
-    <!-- Left Control Panel -->
-    <div class="panel">
-      <h2>🪪 ข้อมูลบัตรประจำตัว</h2>
-      
-      <div class="form-group">
-        <label>รหัสนักเรียน (ล็อก GK- กรอกได้เฉพาะเลข 4 หลัก)</label>
-        <div class="id-input-wrapper">
+    <!-- Left Input Panel -->
+    <div class="control-panel">
+      <div class="panel-title">
+        <span>ข้อมูลบัตรนักเรียน</span>
+        <span style="font-size:0.8rem; opacity:0.6;">CARD CONFIG</span>
+      </div>
+
+      <div class="input-group">
+        <label>รหัสนักเรียน (GK- + เลข 4 หลักเท่านั้น)</label>
+        <div class="id-wrapper">
           <span class="id-prefix">GK-</span>
-          <input type="text" id="input-id-number" maxlength="4" placeholder="0001">
+          <input type="text" id="in-id" maxlength="4" placeholder="0001">
         </div>
       </div>
 
-      <div class="form-group">
-        <label>ชื่อ-นามสกุล / ชื่อใน Roblox</label>
-        <input type="text" class="form-control" id="input-name" placeholder="เช่น Ryuuya Kenji" value="Ryuuya Kenji">
+      <div class="input-group">
+        <label>ชื่อ-นามสกุล / Roblox Username</label>
+        <input type="text" class="custom-input" id="in-name" placeholder="เช่น Ryuuya Kenji" value="Ryuuya Kenji">
       </div>
 
-      <div class="form-group">
-        <label>เข็มยศ / ฉายาประจำตัว</label>
-        <select class="form-control" id="select-rank">
+      <div class="input-group">
+        <label>ตำแหน่ง / เข็มยศประจำตัว</label>
+        <select class="custom-input" id="sel-rank">
           <option value="👑 ประธานนักเรียน">👑 ประธานนักเรียน</option>
           <option value="⚔️ หัวโจกประจำโรงเรียน" selected>⚔️ หัวโจกประจำโรงเรียน</option>
-          <option value="🛡️ ฝ่ายปกครองสุดโหด">🛡️ ฝ่ายปกครองสุดโหด</option>
+          <option value="🛡️ ฝ่ายปกครอง">🛡️ ฝ่ายปกครอง</option>
           <option value="🌸 ดาวประจำโรงเรียน">🌸 ดาวประจำโรงเรียน</option>
           <option value="⚡ มือขวาประธาน">⚡ มือขวาประธาน</option>
-          <option value="🐉 นักเลงในตำนาน">🐉 นักเลงในตำนาน</option>
-          <option value="🔮 ผู้เฝ้ามอง">🔮 ผู้เฝ้ามอง</option>
-          <option value="CUSTOM">✏️ กำหนดฉายาเอง...</option>
+          <option value="CUSTOM">✏️ กำหนดข้อความเอง...</option>
         </select>
       </div>
 
-      <div class="form-group" id="custom-rank-group" style="display: none;">
-        <label>กรอกฉายาที่ต้องการ</label>
-        <input type="text" class="form-control" id="input-custom-rank" placeholder="เช่น เทพซ่า 007">
+      <div class="input-group" id="custom-rank-box" style="display:none;">
+        <label>กรอกตำแหน่งที่ต้องการ</label>
+        <input type="text" class="custom-input" id="in-custom-rank" placeholder="เช่น สมาชิกกิลด์ระดับ SS">
       </div>
 
-      <div class="form-group">
-        <label>ชั้นเรียน / แผนก</label>
-        <input type="text" class="form-control" id="input-class" placeholder="เช่น ม.ปลาย ห้อง 1-A" value="ม.ปลาย ห้อง 1-A">
+      <div class="input-group">
+        <label>ชั้นเรียน / สังกัด</label>
+        <input type="text" class="custom-input" id="in-class" placeholder="เช่น ม.ปลาย ห้อง 1-A" value="ม.ปลาย ห้อง 1-A">
       </div>
 
-      <div class="form-group">
-        <label>รูปโปรไฟล์นักเรียน</label>
-        <input type="file" class="form-control" id="input-photo" accept="image/*">
+      <div class="input-group">
+        <label>อัปโหลดรูปโปรไฟล์</label>
+        <input type="file" class="custom-input" id="in-photo" accept="image/*">
       </div>
 
-      <h2 style="margin-top: 25px;">🎨 ปรับแต่งธีมและสีบัตร</h2>
-      
-      <div class="form-group">
-        <label>เลือกจานสีธีมยอดนิยม</label>
-        <div class="theme-presets">
-          <button class="preset-btn" style="background: linear-gradient(45deg, #ffd700, #ff007f);" onclick="setTheme('#ffd700', '#ff007f', '#8a2be2', '#120e24', '#2a1540')"></button>
-          <button class="preset-btn" style="background: linear-gradient(45deg, #ff0055, #ff5500);" onclick="setTheme('#ff5500', '#ff0055', '#990033', '#200508', '#400a10')"></button>
-          <button class="preset-btn" style="background: linear-gradient(45deg, #00f2fe, #4facfe);" onclick="setTheme('#00f2fe', '#0072ff', '#000066', '#041026', '#08204d')"></button>
-          <button class="preset-btn" style="background: linear-gradient(45deg, #b000ff, #00e5ff);" onclick="setTheme('#00e5ff', '#b000ff', '#4a00e0', '#100526', '#26084d')"></button>
-          <button class="preset-btn" style="background: linear-gradient(45deg, #ffffff, #888888);" onclick="setTheme('#ffffff', '#e0e0e0', '#555555', '#111111', '#222222')"></button>
-          <button class="preset-btn" style="background: linear-gradient(45deg, #ff9a9e, #fecfef);" onclick="setTheme('#fecfef', '#ff9a9e', '#f68084', '#2b101d', '#4d1a33')"></button>
-        </div>
+      <div class="panel-title" style="margin-top: 25px;">
+        <span>ธีมสีลักชัวรี่</span>
+        <span style="font-size:0.8rem; opacity:0.6;">COLOR THEME</span>
       </div>
 
-      <div style="display: flex; gap: 10px;">
-        <div class="form-group" style="flex: 1;">
-          <label>สีขอบ/หลัก</label>
-          <input type="color" class="form-control" id="color-primary" value="#ffd700">
-        </div>
-        <div class="form-group" style="flex: 1;">
-          <label>สีเน้นไฮไลต์</label>
-          <input type="color" class="form-control" id="color-accent" value="#ff007f">
-        </div>
+      <div class="preset-grid">
+        <div class="preset-chip" style="background: linear-gradient(135deg, #0a0c10, #ffd700);" onclick="applyTheme('#0a0c10', '#ffd700', '#ff0055')"></div>
+        <div class="preset-chip" style="background: linear-gradient(135deg, #10051a, #b000ff);" onclick="applyTheme('#10051a', '#b000ff', '#00e5ff')"></div>
+        <div class="preset-chip" style="background: linear-gradient(135deg, #1a050a, #ff0055);" onclick="applyTheme('#1a050a', '#ff0055', '#ffd700')"></div>
+        <div class="preset-chip" style="background: linear-gradient(135deg, #05141a, #00f2fe);" onclick="applyTheme('#05141a', '#00f2fe', '#7b2cbf')"></div>
+        <div class="preset-chip" style="background: linear-gradient(135deg, #111111, #ffffff);" onclick="applyTheme('#111111', '#ffffff', '#ffd700')"></div>
       </div>
-
     </div>
 
-    <!-- Right Interactive Card Stage -->
+    <!-- Right Card Viewport -->
     <div class="card-stage">
       
-      <div class="card-viewport" id="card-viewport">
-        <div class="card-3d" id="card-3d">
+      <div class="card-viewport" id="viewport">
+        <div class="card-3d-inner" id="card-inner">
           
           <!-- FRONT SIDE -->
-          <div class="card-front" id="card-front-element">
-            <div class="holo-foil" id="holo-foil"></div>
-            <div class="glare"></div>
-            
+          <div class="card-front" id="card-front">
+            <div class="card-pattern"></div>
+            <div class="holo-layer" id="holo"></div>
+
             <div class="card-header">
               <div>
-                <div class="school-title">GAKURAN HIGH SCHOOL</div>
-                <div class="school-subtitle">ROBLOX STUDENT IDENTIFICATION</div>
+                <div class="academy-name">GAKURAN ACADEMY</div>
+                <div class="card-type">OFFICIAL STUDENT IDENTIFICATION</div>
               </div>
-              <div style="font-size: 1.2rem;">⛩️</div>
+              <div class="ic-chip"></div>
             </div>
 
             <div class="card-body">
-              <div class="photo-frame">
-                <img id="card-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Student Photo">
+              <div class="photo-container">
+                <img id="display-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Student">
               </div>
 
-              <div class="student-info">
-                <div class="info-row">
-                  <span class="info-label">ชื่อนักเรียน / Student Name</span>
-                  <span class="info-value" id="card-name-display">Ryuuya Kenji</span>
+              <div class="student-details">
+                <div class="detail-item">
+                  <span class="detail-label">Name</span>
+                  <span class="detail-value" id="display-name">Ryuuya Kenji</span>
                 </div>
 
-                <div class="info-row">
-                  <span class="info-label">ตำแหน่ง / Title</span>
-                  <div class="badge-tag" id="card-rank-display">⚔️ หัวโจกประจำโรงเรียน</div>
+                <div class="detail-item">
+                  <span class="detail-label">Title</span>
+                  <div class="rank-pill" id="display-rank">⚔️ หัวโจกประจำโรงเรียน</div>
                 </div>
 
-                <div class="info-row" style="margin-top: 4px;">
-                  <span class="info-label">สังกัด / Class</span>
-                  <span class="info-value" id="card-class-display" style="font-size: 0.8rem;">ม.ปลาย ห้อง 1-A</span>
+                <div class="detail-item">
+                  <span class="detail-label">Class</span>
+                  <span class="detail-value" id="display-class" style="font-size:0.8rem;">ม.ปลาย ห้อง 1-A</span>
                 </div>
               </div>
             </div>
 
             <div class="card-footer">
               <div>
-                <div style="font-size: 0.5rem; color: var(--primary); letter-spacing: 1px;">STUDENT ID</div>
-                <div class="id-code-display" id="card-id-display">GK-0001</div>
+                <div style="font-size: 0.5rem; color: var(--primary); letter-spacing: 1px;">ID NUMBER</div>
+                <div class="id-number-display" id="display-id">GK-0001</div>
               </div>
-              <div class="hologram-stamp">
-                GAKURAN<br>OFFICIAL
+              <div style="font-family: 'Cinzel', serif; font-size: 0.65rem; color: var(--primary); font-weight: bold; border: 1px solid var(--primary); padding: 2px 6px; border-radius: 4px;">
+                VERIFIED
               </div>
             </div>
           </div>
 
           <!-- BACK SIDE -->
-          <div class="card-back" id="card-back-element">
-            <div class="holo-foil"></div>
-            <div class="mag-strip"></div>
+          <div class="card-back" id="card-back">
+            <div class="card-pattern"></div>
+            <div class="holo-layer"></div>
+            <div class="mag-stripe"></div>
 
-            <div class="back-content">
-              <div style="font-size: 0.6rem; color: var(--primary); margin-bottom: 4px;">AUTHORIZED SIGNATURE</div>
-              <div class="sig-strip" id="card-sig-display">Ryuuya K.</div>
+            <div class="back-body">
+              <div style="font-size:0.55rem; color:var(--primary); margin-bottom:4px; letter-spacing:1px;">AUTHORIZED SIGNATURE</div>
+              <div class="signature-box" id="display-sig">Ryuuya K.</div>
 
-              <div class="barcode-container">
-                <div class="barcode"></div>
-                <div style="font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #000; font-weight: bold;" id="card-id-back">GK-0001</div>
+              <div class="barcode-box">
+                <div class="barcode-lines"></div>
+                <div style="font-family:'Space Mono', monospace; font-size:0.75rem; color:#000; font-weight:bold; margin-top:2px;" id="display-id-back">GK-0001</div>
               </div>
 
-              <div class="disclaimer">
-                บัตรประจำตัวนี้เป็นทรัพย์สินของโรงเรียนกาคุรัน Roblox<br>
-                ใช้สำหรับยืนยันตัวตนในเซิร์ฟเวอร์ Discord ชุมชนเท่านั้น
-              </div>
+              <p style="font-size: 0.55rem; color: #666; text-align: center; margin-top: 10px; line-height: 1.3;">
+                This card remains the property of Gakuran Academy Roblox Server.<br>If found, please return to the Student Council.
+              </p>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- Controls -->
-      <div class="card-controls">
-        <button class="btn" onclick="flipCard()">🔄 พลิกบัตร 360°</button>
-        <button class="btn btn-secondary" onclick="resetRotation()">🎯 จัดองศาตรง</button>
-        <button class="btn" onclick="downloadCard()">📥 ดาวน์โหลดบัตร (PNG)</button>
+      <!-- Action Buttons -->
+      <div class="action-bar">
+        <button class="btn" onclick="flipCard()">🔄 พลิกหน้า-หลัง 360°</button>
+        <button class="btn btn-outline" onclick="resetCard()">🎯 หมุนตรง</button>
+        <button class="btn" onclick="saveCardImage()">📥 ดาวน์โหลดรูปบัตร (PNG)</button>
       </div>
 
     </div>
@@ -708,189 +662,153 @@
   </div>
 
   <script>
-    // --- State Elements ---
-    const card3D = document.getElementById('card-3d');
-    const cardViewport = document.getElementById('card-viewport');
-    const holoFoil = document.getElementById('holo-foil');
-    
-    // Form Inputs
-    const inputId = document.getElementById('input-id-number');
-    const inputName = document.getElementById('input-name');
-    const selectRank = document.getElementById('select-rank');
-    const inputCustomRank = document.getElementById('input-custom-rank');
-    const customRankGroup = document.getElementById('custom-rank-group');
-    const inputClass = document.getElementById('input-class');
-    const inputPhoto = document.getElementById('input-photo');
+    // Elements
+    const cardInner = document.getElementById('card-inner');
+    const viewport = document.getElementById('viewport');
+    const holo = document.getElementById('holo');
 
-    // Display Displays
-    const cardIdDisplay = document.getElementById('card-id-display');
-    const cardIdBackDisplay = document.getElementById('card-id-back');
-    const cardNameDisplay = document.getElementById('card-name-display');
-    const cardRankDisplay = document.getElementById('card-rank-display');
-    const cardClassDisplay = document.getElementById('card-class-display');
-    const cardSigDisplay = document.getElementById('card-sig-display');
-    const cardPhoto = document.getElementById('card-photo');
+    const inId = document.getElementById('in-id');
+    const inName = document.getElementById('in-name');
+    const selRank = document.getElementById('sel-rank');
+    const inCustomRank = document.getElementById('in-custom-rank');
+    const customRankBox = document.getElementById('custom-rank-box');
+    const inClass = document.getElementById('in-class');
+    const inPhoto = document.getElementById('in-photo');
 
-    // Color Pickers
-    const colorPrimary = document.getElementById('color-primary');
-    const colorAccent = document.getElementById('color-accent');
+    const displayName = document.getElementById('display-name');
+    const displayRank = document.getElementById('display-rank');
+    const displayClass = document.getElementById('display-class');
+    const displayId = document.getElementById('display-id');
+    const displayIdBack = document.getElementById('display-id-back');
+    const displaySig = document.getElementById('display-sig');
+    const displayPhoto = document.getElementById('display-photo');
 
-    let currentRotationY = 0;
     let isFlipped = false;
+    let currentY = 0;
 
-    // --- ID Number Input Mask Enforcement (Max 4 digits) ---
-    inputId.addEventListener('input', (e) => {
-      let val = e.target.value.replace(/[^0-9]/g, ''); // Strip non-numeric characters
-      if (val.length > 4) val = val.substring(0, 4);
-      e.target.value = val;
+    // Strict ID Masking (GK- + Max 4 Digits)
+    inId.addEventListener('input', (e) => {
+      let num = e.target.value.replace(/[^0-9]/g, '');
+      if (num.length > 4) num = num.substring(0, 4);
+      e.target.value = num;
       
-      const formatted = `GK-${val.padStart(4, '0')}`;
-      cardIdDisplay.innerText = formatted;
-      cardIdBackDisplay.innerText = formatted;
+      const fullCode = `GK-${num.padStart(4, '0')}`;
+      displayId.innerText = fullCode;
+      displayIdBack.innerText = fullCode;
     });
 
-    // --- Dynamic Text Updates ---
-    inputName.addEventListener('input', (e) => {
+    // Inputs
+    inName.addEventListener('input', (e) => {
       const val = e.target.value || 'Student Name';
-      cardNameDisplay.innerText = val;
-      cardSigDisplay.innerText = val.split(' ')[0] + ' K.';
+      displayName.innerText = val;
+      displaySig.innerText = val.split(' ')[0] + ' K.';
     });
 
-    selectRank.addEventListener('change', (e) => {
+    selRank.addEventListener('change', (e) => {
       if (e.target.value === 'CUSTOM') {
-        customRankGroup.style.display = 'block';
-        cardRankDisplay.innerText = inputCustomRank.value || '⭐ ยศกำหนดเอง';
+        customRankBox.style.display = 'block';
+        displayRank.innerText = inCustomRank.value || '⭐ Custom Title';
       } else {
-        customRankGroup.style.display = 'none';
-        cardRankDisplay.innerText = e.target.value;
+        customRankBox.style.display = 'none';
+        displayRank.innerText = e.target.value;
       }
     });
 
-    inputCustomRank.addEventListener('input', (e) => {
-      cardRankDisplay.innerText = e.target.value ? `⭐ ${e.target.value}` : '⭐ ยศกำหนดเอง';
+    inCustomRank.addEventListener('input', (e) => {
+      displayRank.innerText = e.target.value ? `⭐ ${e.target.value}` : '⭐ Custom Title';
     });
 
-    inputClass.addEventListener('input', (e) => {
-      cardClassDisplay.innerText = e.target.value || 'ม.ปลาย';
+    inClass.addEventListener('input', (e) => {
+      displayClass.innerText = e.target.value || 'Class Name';
     });
 
-    // --- Dynamic Photo Upload ---
-    inputPhoto.addEventListener('change', (e) => {
+    // Photo Upload
+    inPhoto.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-          cardPhoto.src = event.target.result;
-        };
+        reader.onload = (evt) => { displayPhoto.src = evt.target.result; };
         reader.readAsDataURL(file);
       }
     });
 
-    // --- Color Theme Change Handlers ---
-    colorPrimary.addEventListener('input', (e) => {
-      document.documentElement.style.setProperty('--primary', e.target.value);
-      document.documentElement.style.setProperty('--glow-color', e.target.value + '80');
-    });
-
-    colorAccent.addEventListener('input', (e) => {
-      document.documentElement.style.setProperty('--accent', e.target.value);
-    });
-
-    function setTheme(primary, accent, secondary, bg1, bg2) {
+    // Themes
+    function applyTheme(base, primary, accent) {
+      document.documentElement.style.setProperty('--card-base', base);
       document.documentElement.style.setProperty('--primary', primary);
       document.documentElement.style.setProperty('--accent', accent);
-      document.documentElement.style.setProperty('--secondary', secondary);
-      document.documentElement.style.setProperty('--card-bg-1', bg1);
-      document.documentElement.style.setProperty('--card-bg-2', bg2);
-      document.documentElement.style.setProperty('--glow-color', primary + '80');
-
-      colorPrimary.value = primary;
-      colorAccent.value = accent;
+      document.documentElement.style.setProperty('--card-glow', primary + '40');
     }
 
-    // --- 3D Tilt & Mouse Physics Effect ---
-    let isDragging = false;
-    let startX, startY;
-    let rotateX = 0;
-    let rotateY = 0;
+    // Smooth 3D Interaction
+    let isMouseDown = false, startX = 0, rotX = 0, rotY = 0;
 
-    cardViewport.addEventListener('mousemove', (e) => {
-      if (isDragging) return;
-      const rect = cardViewport.getBoundingClientRect();
+    viewport.addEventListener('mousemove', (e) => {
+      if (isMouseDown) return;
+      const rect = viewport.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
 
-      const tiltX = (y / rect.height) * -25;
-      const tiltY = (x / rect.width) * 25;
+      const tiltX = (y / rect.height) * -20;
+      const tiltY = (x / rect.width) * 20;
 
-      card3D.style.transform = `rotateX(${tiltX}deg) rotateY(${currentRotationY + tiltY}deg)`;
-      
-      // Move holographic shine overlay
-      holoFoil.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
+      cardInner.style.transform = `rotateX(${tiltX}deg) rotateY(${currentY + tiltY}deg)`;
+      holo.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
     });
 
-    cardViewport.addEventListener('mouseleave', () => {
-      if (!isDragging) {
-        card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+    viewport.addEventListener('mouseleave', () => {
+      if (!isMouseDown) {
+        cardInner.style.transform = `rotateX(0deg) rotateY(${currentY}deg)`;
       }
     });
 
-    // --- Touch / Mouse Drag Rotation 360° ---
-    cardViewport.addEventListener('mousedown', (e) => {
-      isDragging = true;
+    // Drag Rotate
+    viewport.addEventListener('mousedown', (e) => {
+      isMouseDown = true;
       startX = e.clientX;
-      startY = e.clientY;
     });
 
     window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
+      if (!isMouseDown) return;
       const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-
-      rotateY = currentRotationY + deltaX * 0.5;
-      rotateX = -deltaY * 0.5;
-
-      card3D.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      rotY = currentY + deltaX * 0.6;
+      cardInner.style.transform = `rotateY(${rotY}deg)`;
     });
 
     window.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        currentRotationY = rotateY;
+      if (isMouseDown) {
+        isMouseDown = false;
+        currentY = rotY;
       }
     });
 
     function flipCard() {
       isFlipped = !isFlipped;
-      currentRotationY = isFlipped ? 180 : 0;
-      card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+      currentY = isFlipped ? 180 : 0;
+      cardInner.style.transform = `rotateX(0deg) rotateY(${currentY}deg)`;
     }
 
-    function resetRotation() {
+    function resetCard() {
       isFlipped = false;
-      currentRotationY = 0;
-      card3D.style.transform = `rotateX(0deg) rotateY(0deg)`;
+      currentY = 0;
+      cardInner.style.transform = `rotateX(0deg) rotateY(0deg)`;
     }
 
-    // --- Download Card Image Function ---
-    function downloadCard() {
-      const targetElement = isFlipped ? document.getElementById('card-back-element') : document.getElementById('card-front-element');
-      
-      // Reset rotation temporarily for crisp snapshot
-      card3D.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    // Save PNG
+    function saveCardImage() {
+      const target = isFlipped ? document.getElementById('card-back') : document.getElementById('card-front');
+      cardInner.style.transform = 'rotateX(0deg) rotateY(0deg)';
 
-      html2canvas(targetElement, {
+      html2canvas(target, {
         scale: 3,
         useCORS: true,
         backgroundColor: null
       }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Gakuran_StudentID_${inputId.value || '0001'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-
-        // Restore flip state if needed
-        card3D.style.transform = `rotateX(0deg) rotateY(${currentRotationY}deg)`;
+        const a = document.createElement('a');
+        a.download = `Gakuran_Card_${inId.value || '0001'}.png`;
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+        cardInner.style.transform = `rotateX(0deg) rotateY(${currentY}deg)`;
       });
     }
   </script>
